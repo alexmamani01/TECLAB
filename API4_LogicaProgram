@@ -1,0 +1,105 @@
+<script src="//onlinegdb.com/embed/js/5Ez4002E7?theme=dark"></script>
+
+API4 Alexandra Mamani
+//importar las librerias que vamos a usar
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <locale.h>
+#include <algorithm>
+
+using namespace std;
+const int max_numeros=100;
+//función booleana(true/false) para los intentos
+bool numeros_ya_ingresados (const int numeros[], int numero, int size) {
+    for (int i= 0; i < size ; ++i) {
+        if (numeros [i]== numero){
+            return true;
+        }
+    }
+            return false;
+        }
+        
+void mostrar_numeros_ingresados (const int numeros [], int size) {
+    cout <<"numeros ya ingresados:";
+    for (int i=0; i< size; ++i){
+        cout<< numeros[i]<<"";
+    }
+    cout<<endl;
+}
+//funcion para ordenar los numeros de menor a mayor
+void ordenar_numeros(int numeros[],int size){
+    sort (numeros, numeros+ size);
+}
+
+
+int main (){
+    setlocale (LC_ALL, "");
+    srand(time(0));
+    
+    int limite_inferior, limite_superior, intentos_maximos;
+    cout<<"ingrese el valor minimo del rango ";
+    cin>> limite_inferior;
+    cout<< "ingrese el valor maximo del rango ";
+    cin>> limite_superior;
+    
+    //validación de datos ingresados:
+     if (limite_inferior>= limite_superior){
+     cout<<"el limite inferior tiene que ser menor que el limite superior.Finalizando programa"<< endl;
+     return 1 ;
+     }
+    
+    cout<< "ingrese la cantidad de intentos permitidos ";
+    cin>>intentos_maximos;
+    
+    if (intentos_maximos<=0){
+    cout<<"La cantidad de numeros tiene que ser mayor a 0.Finalizando programa"<<endl;
+    return 1;
+    }
+    
+    int numero_secreto = rand() % (limite_superior - limite_inferior + 1)+ limite_inferior ;
+    
+    int intentos=0;
+    int numero_usuario;
+    int numeros_ingresados [max_numeros]; //sólo puede ingresar tres intentos 
+    int numeros_ingresados_size=0;
+
+    while (intentos< intentos_maximos){
+        cout <<"intentos"<< (intentos+1)<<"ingrese numero dentro del rango"<<" "<< limite_inferior <<" Y " << limite_superior<<":";
+        cin>>numero_usuario ; //el numero que ingrese se almacenará en la variable numero_usuario
+        if (numero_usuario< limite_inferior || numero_usuario> limite_superior){
+            cout<<"ingrese un numero dentro del rango"<<endl;
+            continue;
+        }
+        if (numeros_ya_ingresados(numeros_ingresados,numero_usuario, numeros_ingresados_size )){
+            cout<<"el numero ya fue ingresado antes"<< endl;
+            continue;
+        }
+        numeros_ingresados[numeros_ingresados_size++]=numero_usuario;
+        //ordenar numeros invocar funcion
+        ordenar_numeros(numeros_ingresados, numeros_ingresados_size);
+        
+        if (numero_usuario==numero_secreto){
+            cout <<"Adivinaste el número!"<< (intentos+ 1) <<"intentos" << endl;
+            break;
+        } else {
+            cout<<"numero incorrecto";
+             if (numero_usuario< numero_secreto){
+            cout <<"el numero es mayor"<<endl;
+            }else {
+                cout<<"el numero es menor"<<endl;
+            }
+        
+            mostrar_numeros_ingresados(numeros_ingresados, numeros_ingresados_size);
+             intentos++;
+            cout<<"te quedan"<< (intentos_maximos - intentos)<<"intentos"<< endl;
+            }
+        
+    }
+            
+    if (intentos==intentos_maximos){
+        cout <<"se acabaron los intentos.El numero secreto era" << numero_secreto<< endl;
+        mostrar_numeros_ingresados(numeros_ingresados, numeros_ingresados_size);
+    }    
+    return 0;    
+    }  
